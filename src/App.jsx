@@ -2,13 +2,51 @@ import { useState } from "react";
 
 function App() {
   const [page, setPage] = useState("dashboard");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  function navigateTo(nextPage) {
+    setPage(nextPage);
+    setMobileMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
   return (
     <div className="app">
 
+      <header className="mobile-header">
+        <button
+          className="mobile-menu-button"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Open navigation"
+        >
+          {mobileMenuOpen ? "✕" : "☰"}
+        </button>
+
+        <div className="mobile-brand">
+          <div className="mobile-brand-mark">A</div>
+          <div>
+            <strong>AnnaSetu</strong>
+            <span>Food Intelligence</span>
+          </div>
+        </div>
+
+        <div className="mobile-ai-status">
+          <span></span>
+          AI
+        </div>
+      </header>
+
       {/* ================= SIDEBAR ================= */}
 
-      <aside className="sidebar">
+      <aside className={`sidebar ${mobileMenuOpen ? "mobile-open" : ""}`}>
+
+        <button
+          className="mobile-sidebar-close"
+          onClick={() => setMobileMenuOpen(false)}
+          aria-label="Close navigation"
+        >
+          ✕
+        </button>
 
         <div className="brand-area">
           <div className="brand-mark">A</div>
@@ -27,7 +65,7 @@ function App() {
 
           <button
             className={page === "dashboard" ? "active" : ""}
-            onClick={() => setPage("dashboard")}
+            onClick={() => navigateTo("dashboard")}
           >
             <span>⌂</span>
             Dashboard
@@ -35,7 +73,7 @@ function App() {
 
           <button
             className={page === "prediction" ? "active" : ""}
-            onClick={() => setPage("prediction")}
+            onClick={() => navigateTo("prediction")}
           >
             <span>✦</span>
             AI Prediction
@@ -43,7 +81,7 @@ function App() {
 
           <button
             className={page === "simulator" ? "active" : ""}
-            onClick={() => setPage("simulator")}
+            onClick={() => navigateTo("simulator")}
           >
             <span>◈</span>
             What-If Lab
@@ -51,7 +89,7 @@ function App() {
 
           <button
             className={page === "surplus" ? "active" : ""}
-            onClick={() => setPage("surplus")}
+            onClick={() => navigateTo("surplus")}
           >
             <span>◇</span>
             Surplus Intelligence
@@ -59,7 +97,7 @@ function App() {
 
           <button
             className={page === "recovery" ? "active" : ""}
-            onClick={() => setPage("recovery")}
+            onClick={() => navigateTo("recovery")}
           >
             <span>↗</span>
             Recovery Engine
@@ -67,7 +105,7 @@ function App() {
 
           <button
             className={page === "analytics" ? "active" : ""}
-            onClick={() => setPage("analytics")}
+            onClick={() => navigateTo("analytics")}
           >
             <span>▥</span>
             Impact Analytics
@@ -108,7 +146,7 @@ function App() {
       <main className="main-content">
 
         {page === "dashboard" && (
-          <DashboardPage setPage={setPage} />
+          <DashboardPage setPage={navigateTo} />
         )}
 
         {page === "prediction" && (
@@ -132,6 +170,40 @@ function App() {
         )}
 
       </main>
+
+      <nav className="mobile-bottom-nav">
+        <button
+          className={page === "dashboard" ? "active" : ""}
+          onClick={() => navigateTo("dashboard")}
+        >
+          <span>⌂</span>
+          <small>Home</small>
+        </button>
+
+        <button
+          className={page === "prediction" ? "active" : ""}
+          onClick={() => navigateTo("prediction")}
+        >
+          <span>✦</span>
+          <small>Predict</small>
+        </button>
+
+        <button
+          className={page === "surplus" ? "active" : ""}
+          onClick={() => navigateTo("surplus")}
+        >
+          <span>◇</span>
+          <small>Surplus</small>
+        </button>
+
+        <button
+          className={page === "recovery" || page === "analytics" ? "active" : ""}
+          onClick={() => navigateTo("recovery")}
+        >
+          <span>↗</span>
+          <small>Recover</small>
+        </button>
+      </nav>
 
     </div>
   );
