@@ -12,34 +12,26 @@ function App() {
 
   return (
     <div className="app">
-
       <header className="mobile-header">
         <button
           className="mobile-menu-button"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          onClick={() => setMobileMenuOpen((open) => !open)}
           aria-label="Open navigation"
         >
           {mobileMenuOpen ? "✕" : "☰"}
         </button>
 
         <div className="mobile-brand">
-          <div className="mobile-brand-mark">A</div>
-          <div>
-            <strong>AnnaSetu</strong>
-            <span>Food Intelligence</span>
-          </div>
+          <img src="/annasetu-logo.png" alt="AnnaSetu AI" />
         </div>
 
         <div className="mobile-ai-status">
           <span></span>
-          AI
+          AI LIVE
         </div>
       </header>
 
-      {/* ================= SIDEBAR ================= */}
-
       <aside className={`sidebar ${mobileMenuOpen ? "mobile-open" : ""}`}>
-
         <button
           className="mobile-sidebar-close"
           onClick={() => setMobileMenuOpen(false)}
@@ -49,538 +41,221 @@ function App() {
         </button>
 
         <div className="brand-area">
-          <div className="brand-mark">A</div>
-
-          <div>
-            <h1>AnnaSetu</h1>
-            <p className="tagline">Smart Food Intelligence</p>
-          </div>
+          <img
+            className="annasetu-sidebar-logo"
+            src="/annasetu-logo.png"
+            alt="AnnaSetu AI"
+          />
         </div>
 
-        <div className="nav-section-title">
-          COMMAND CENTER
-        </div>
+        <div className="nav-section-title">COMMAND CENTER</div>
 
         <nav>
-
-          <button
-            className={page === "dashboard" ? "active" : ""}
-            onClick={() => navigateTo("dashboard")}
-          >
-            <span>⌂</span>
-            Dashboard
+          <button className={page === "dashboard" ? "active" : ""} onClick={() => navigateTo("dashboard")}>
+            <span>⌂</span> Dashboard
           </button>
-
-          <button
-            className={page === "prediction" ? "active" : ""}
-            onClick={() => navigateTo("prediction")}
-          >
-            <span>✦</span>
-            AI Prediction
+          <button className={page === "prediction" ? "active" : ""} onClick={() => navigateTo("prediction")}>
+            <span>✦</span> AI Prediction
           </button>
-
-          <button
-            className={page === "simulator" ? "active" : ""}
-            onClick={() => navigateTo("simulator")}
-          >
-            <span>◈</span>
-            What-If Lab
+          <button className={page === "simulator" ? "active" : ""} onClick={() => navigateTo("simulator")}>
+            <span>◈</span> What-If Lab
           </button>
-
-          <button
-            className={page === "surplus" ? "active" : ""}
-            onClick={() => navigateTo("surplus")}
-          >
-            <span>◇</span>
-            Surplus Intelligence
+          <button className={page === "surplus" ? "active" : ""} onClick={() => navigateTo("surplus")}>
+            <span>◇</span> Surplus Intelligence
           </button>
-
-          <button
-            className={page === "recovery" ? "active" : ""}
-            onClick={() => navigateTo("recovery")}
-          >
-            <span>↗</span>
-            Recovery Engine
+          <button className={page === "recovery" ? "active" : ""} onClick={() => navigateTo("recovery")}>
+            <span>↗</span> Recovery Engine
           </button>
-
-          <button
-            className={page === "analytics" ? "active" : ""}
-            onClick={() => navigateTo("analytics")}
-          >
-            <span>▥</span>
-            Impact Analytics
+          <button className={page === "analytics" ? "active" : ""} onClick={() => navigateTo("analytics")}>
+            <span>▥</span> Impact Analytics
           </button>
-
         </nav>
 
-
         <div className="sidebar-bottom">
-
           <div className="sidebar-ai">
-
-            <div className="sidebar-ai-orb">
-              ✦
-            </div>
-
+            <div className="sidebar-ai-orb">✦</div>
             <div>
               <strong>Anna Intelligence</strong>
               <small>Engine operational</small>
             </div>
-
             <span className="sidebar-online"></span>
-
           </div>
-
           <div className="sidebar-footer">
             <span>ANNA</span>
             <span>SIH 2026 • v1.0</span>
           </div>
-
         </div>
-
       </aside>
 
-
-      {/* ================= MAIN ================= */}
-
       <main className="main-content">
-
-        {page === "dashboard" && (
-          <DashboardPage setPage={navigateTo} />
-        )}
-
-        {page === "prediction" && (
-          <PredictionPage />
-        )}
-
-        {page === "simulator" && (
-          <SimulatorPage />
-        )}
-
-        {page === "surplus" && (
-          <SurplusPage />
-        )}
-
-        {page === "recovery" && (
-          <RecoveryPage />
-        )}
-
-        {page === "analytics" && (
-          <AnalyticsPage />
-        )}
-
+        {page === "dashboard" && <DashboardPage setPage={navigateTo} />}
+        {page === "prediction" && <PredictionPage />}
+        {page === "simulator" && <SimulatorPage />}
+        {page === "surplus" && <SurplusPage />}
+        {page === "recovery" && <RecoveryPage />}
+        {page === "analytics" && <AnalyticsPage />}
       </main>
 
       <nav className="mobile-bottom-nav">
-        <button
-          className={page === "dashboard" ? "active" : ""}
-          onClick={() => navigateTo("dashboard")}
-        >
-          <span>⌂</span>
-          <small>Home</small>
+        <button className={page === "dashboard" ? "active" : ""} onClick={() => navigateTo("dashboard")}>
+          <span>⌂</span><small>Home</small>
         </button>
-
-        <button
-          className={page === "prediction" ? "active" : ""}
-          onClick={() => navigateTo("prediction")}
-        >
-          <span>✦</span>
-          <small>Predict</small>
+        <button className={page === "prediction" ? "active" : ""} onClick={() => navigateTo("prediction")}>
+          <span>✦</span><small>Predict</small>
         </button>
-
-        <button
-          className={page === "surplus" ? "active" : ""}
-          onClick={() => navigateTo("surplus")}
-        >
-          <span>◇</span>
-          <small>Surplus</small>
+        <button className={page === "surplus" ? "active" : ""} onClick={() => navigateTo("surplus")}>
+          <span>◇</span><small>Surplus</small>
         </button>
-
-        <button
-          className={page === "recovery" || page === "analytics" ? "active" : ""}
-          onClick={() => navigateTo("recovery")}
-        >
-          <span>↗</span>
-          <small>Recover</small>
+        <button className={page === "recovery" ? "active" : ""} onClick={() => navigateTo("recovery")}>
+          <span>↗</span><small>Recover</small>
+        </button>
+        <button className={page === "analytics" ? "active" : ""} onClick={() => navigateTo("analytics")}>
+          <span>▥</span><small>Impact</small>
         </button>
       </nav>
-
     </div>
   );
 }
 
-
-/* =========================================================
-   DASHBOARD
-========================================================= */
-
 function DashboardPage({ setPage }) {
-
-  const dishes = [
-    ["Rice", "1,780", "1,850", "+3.9%"],
-    ["Dal Tadka", "1,620", "1,680", "+3.7%"],
-    ["Chicken Curry", "1,480", "1,530", "+3.4%"],
-    ["Veg Curry", "1,150", "1,200", "+4.3%"],
-    ["Roti", "1,700", "1,760", "+3.5%"],
+  const organizations = [
+    {
+      icon: "♧",
+      title: "NGOs",
+      text: "Support verified NGOs working for a better tomorrow.",
+      tags: ["AnnaSeva Foundation", "FoodBridge Trust"]
+    },
+    {
+      icon: "☪",
+      title: "Madrasas",
+      text: "Provide nutritious food for students and communities.",
+      tags: ["Noor Community Madrasa", "Rahma Learning Centre"]
+    },
+    {
+      icon: "⌂",
+      title: "Ashrams",
+      text: "Nourish underserved communities with healthy meals.",
+      tags: ["Sahyog Seva Ashram", "Anand Jeevan Ashram"]
+    }
   ];
 
   return (
     <div className="page command-center">
-
-      <div className="command-header">
-
-        <div>
-          <div className="eyebrow">
-            ANNASETU / OPERATIONS
-          </div>
-
-          <h2>
-            Good evening, <span>Kitchen Manager.</span>
-          </h2>
-
-          <p>
-            Your intelligent food operations command center.
-            Predict demand, optimize production and recover
-            unavoidable surplus.
-          </p>
+      <div className="dashboard-topbar">
+        <div className="dashboard-context">
+          <span className="live-dot"></span>
+          ANNASETU AI • FOOD INTELLIGENCE
         </div>
-
-        <div className="ai-status">
-          <span className="status-dot"></span>
-
-          <div>
-            <strong>AI ENGINE ACTIVE</strong>
-            <small>System operational</small>
-          </div>
+        <div className="dashboard-user">
+          <span className="notification-icon">♧</span>
+          <span className="user-avatar">A</span>
+          <strong>Kitchen Manager</strong>
+          <span>⌄</span>
         </div>
-
       </div>
 
-
-      {/* HERO */}
-
-      <section className="command-hero">
-
+      <section className="command-hero premium-hero">
         <div className="hero-content">
-
-          <div className="hero-label">
-            AI FOOD OPERATIONS
-          </div>
-
+          <div className="hero-label">AI-POWERED FOOD SURPLUS MANAGEMENT</div>
           <h1>
-            Prepare smarter.
+            Good Food
             <br />
-            <span>Waste less.</span>
+            Deserves a <span>Second Chance</span>
           </h1>
-
           <p>
-            AnnaSetu predicts demand before production,
-            identifies surplus and helps kitchens recover
-            maximum value from unavoidable food.
+            AnnaSetu connects surplus food from large kitchens with people in need — reducing waste,
+            feeding communities, and creating a bigger impact.
           </p>
-
           <div className="hero-actions">
-
-            <button
-              onClick={() => setPage("prediction")}
-            >
-              ✦ Run AI Prediction
+            <button onClick={() => setPage("prediction")}>
+              ✦ Predict Now <strong>→</strong>
             </button>
-
-            <button
-              className="hero-secondary"
-              onClick={() => setPage("simulator")}
-            >
+            <button className="hero-secondary" onClick={() => setPage("simulator")}>
               ◈ Open What-If Lab
             </button>
-
           </div>
-
         </div>
 
-
-        <div className="hero-visual">
-
+        <div className="hero-visual premium-hero-visual">
+          <div className="glow-aura"></div>
           <div className="orbit orbit-one"></div>
           <div className="orbit orbit-two"></div>
-
+          <div className="hero-logo-wrap">
+            <img className="annasetu-hero-logo" src="/annasetu-logo.png" alt="AnnaSetu AI" />
+          </div>
           <div className="hero-core">
-
             <span>EXPECTED</span>
-
             <strong>1,850</strong>
-
             <small>CONSUMERS</small>
-
           </div>
-
         </div>
-
       </section>
 
-
-      {/* KPIs */}
-
-      <div className="command-stats">
-
-        <MetricCard
-          icon="◎"
-          label="Expected Consumers"
-          value="1,850"
-          badge="FORECAST"
-          note="+4.2% vs weekly average"
-        />
-
-        <MetricCard
-          icon="◈"
-          label="Recommended Production"
-          value="1,920"
-          badge="AI PLAN"
-          note="Controlled safety buffer"
-        />
-
-        <MetricCard
-          icon="◇"
-          label="Expected Surplus"
-          value="72"
-          badge="RECOVERY"
-          note="Potentially recoverable"
-          gold
-        />
-
-        <MetricCard
-          icon="₹"
-          label="Potential Savings"
-          value="₹1,440"
-          badge="IMPACT"
-          note="Estimated operational savings"
-          gold
-        />
-
-      </div>
-
-
-      {/* INTELLIGENCE / PRODUCTION */}
-
-      <div className="dashboard-grid">
-
-        <div className="intelligence-card">
-
-          <div className="intelligence-header">
-
-            <div>
-              <span className="dashboard-label">
-                ANNA INTELLIGENCE
-              </span>
-
-              <h2>Today's insight</h2>
-            </div>
-
-            <div className="ai-orb">
-              AI
-            </div>
-
-          </div>
-
-          <div className="insight-main">
-
-            <div className="insight-icon">
-              ✦
-            </div>
-
-            <p>
-              Rice demand is expected to be higher today.
-              Friday consumption historically trends above
-              the weekly average, so AnnaSetu recommends a
-              controlled production increase.
-            </p>
-
-          </div>
-
-          <div className="insight-stat">
-
-            <span>EXPECTED CHANGE</span>
-
-            <strong>+7%</strong>
-
-            <small>vs normal Friday</small>
-
-          </div>
-
+      <section className="serve-section">
+        <div className="serve-heading">
+          <span className="dashboard-label">WHO WE SERVE</span>
+          <h2>Connecting <span>Surplus</span> to Those in <span>Need</span></h2>
+          <div className="gold-divider"></div>
         </div>
 
-
-        <div className="production-card">
-
-          <div className="production-header">
-
-            <div>
-              <span className="dashboard-label">
-                PRODUCTION PLAN
-              </span>
-
-              <h2>Today's recommendation</h2>
+        <div className="serve-grid">
+          {organizations.map((org) => (
+            <div className="serve-card" key={org.title}>
+              <div className="serve-card-top">
+                <div className="serve-icon">{org.icon}</div>
+                <button onClick={() => setPage("recovery")} aria-label={`Open ${org.title}`}>
+                  →
+                </button>
+              </div>
+              <h3>{org.title}</h3>
+              <p>{org.text}</p>
+              <div className="serve-tags">
+                {org.tags.map((tag) => <span key={tag}>{tag}</span>)}
+              </div>
             </div>
-
-            <button
-              onClick={() => setPage("prediction")}
-            >
-              View AI Plan →
-            </button>
-
-          </div>
-
-          <div className="production-summary">
-
-            <div>
-              <span>EXPECTED DEMAND</span>
-              <strong>1,850</strong>
-            </div>
-
-            <div className="summary-arrow">
-              →
-            </div>
-
-            <div>
-              <span>RECOMMENDED</span>
-              <strong className="emerald-text">
-                1,920
-              </strong>
-            </div>
-
-          </div>
-
-          <div className="production-progress">
-
-            <div className="progress-label">
-              <span>Production optimization</span>
-              <strong>92%</strong>
-            </div>
-
-            <div className="progress-track">
-              <div className="progress-fill"></div>
-            </div>
-
-          </div>
-
-          <div className="production-note">
-            <span>✦</span>
-            Controlled buffer reduces stock-out risk
-            without unnecessary overproduction.
-          </div>
-
-        </div>
-
-      </div>
-
-
-      {/* DISH TABLE */}
-
-      <section className="premium-section">
-
-        <div className="section-heading">
-
-          <div>
-            <span className="dashboard-label">
-              DISH-LEVEL INTELLIGENCE
-            </span>
-
-            <h2>Production overview</h2>
-          </div>
-
-        </div>
-
-        <div className="premium-table">
-
-          <div className="premium-table-header">
-            <span>DISH</span>
-            <span>EXPECTED</span>
-            <span>RECOMMENDED</span>
-            <span>BUFFER</span>
-          </div>
-
-          {dishes.map((dish) => (
-
-            <div
-              className="premium-table-row"
-              key={dish[0]}
-            >
-
-              <span className="dish-name">
-                {dish[0]}
-              </span>
-
-              <span>{dish[1]}</span>
-
-              <strong>{dish[2]}</strong>
-
-              <span className="buffer-positive">
-                {dish[3]}
-              </span>
-
-            </div>
-
           ))}
-
         </div>
-
       </section>
 
+      <section className="command-stats minimal-kpis">
+        <MetricCard icon="◎" label="Expected Consumers" value="1,850" badge="FORECAST" note="+4.2% vs weekly average" />
+        <MetricCard icon="◈" label="Recommended Production" value="1,920" badge="AI PLAN" note="Controlled safety buffer" />
+        <MetricCard icon="◇" label="Expected Surplus" value="72" badge="RECOVERY" note="Potentially recoverable" gold />
+        <MetricCard icon="₹" label="Potential Savings" value="₹1,440" badge="IMPACT" note="Estimated operational savings" gold />
+      </section>
 
-      {/* QUICK ACTIONS */}
-
-      <section className="premium-section">
-
-        <div className="section-heading">
-
-          <div>
-            <span className="dashboard-label">
-              QUICK ACTIONS
-            </span>
-
-            <h2>Continue your workflow</h2>
-          </div>
-
+      <section className="impact-strip">
+        <div className="impact-strip-item">
+          <div>✦</div>
+          <span><strong>Predict</strong><small>Smarter forecasting with AI</small></span>
         </div>
+        <div className="impact-strip-line"></div>
+        <div className="impact-strip-item">
+          <div>✓</div>
+          <span><strong>Prevent</strong><small>Reduce waste at the source</small></span>
+        </div>
+        <div className="impact-strip-line"></div>
+        <div className="impact-strip-item">
+          <div>♡</div>
+          <span><strong>Recover</strong><small>Feed communities, create impact</small></span>
+        </div>
+      </section>
 
+      <section className="dashboard-next-actions">
+        <div>
+          <span className="dashboard-label">COMMAND CENTER</span>
+          <h2>Continue your workflow</h2>
+        </div>
         <div className="premium-actions">
-
-          <ActionCard
-            icon="✦"
-            title="Predict demand"
-            description="Generate the next production plan"
-            onClick={() => setPage("prediction")}
-          />
-
-          <ActionCard
-            icon="◈"
-            title="Run scenario"
-            description="Test attendance and conditions"
-            onClick={() => setPage("simulator")}
-          />
-
-          <ActionCard
-            icon="◇"
-            title="Analyze surplus"
-            description="Identify potentially recoverable food"
-            onClick={() => setPage("surplus")}
-          />
-
-          <ActionCard
-            icon="↗"
-            title="Recover value"
-            description="Find the best recovery pathway"
-            onClick={() => setPage("recovery")}
-          />
-
+          <ActionCard icon="✦" title="Predict demand" description="Generate the next production plan" onClick={() => setPage("prediction")} />
+          <ActionCard icon="◈" title="Run scenario" description="Test attendance and conditions" onClick={() => setPage("simulator")} />
+          <ActionCard icon="◇" title="Analyze surplus" description="Identify potentially recoverable food" onClick={() => setPage("surplus")} />
+          <ActionCard icon="↗" title="Recover value" description="Find the best recovery pathway" onClick={() => setPage("recovery")} />
         </div>
-
       </section>
-
     </div>
   );
 }
-
 
 function MetricCard({
   icon,
