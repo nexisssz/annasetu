@@ -3,6 +3,35 @@ import { useState } from "react";
 function App() {
   const [page, setPage] = useState("dashboard");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const initialWorkflow = {
+    attendance: 2000,
+    weather: "Clear",
+    event: "No",
+    predicted: 1850,
+    production: 1920,
+    surplus: 72,
+    recoverable: 60,
+    served: 1815,
+    savings: 1440,
+    wasteCost: 1440,
+    portionsAvoided: 0,
+    storage: "Refrigerated",
+    hours: 2,
+    recipient: null,
+    requestSent: false
+  };
+  const [workflow, setWorkflow] = useState(initialWorkflow);
+
+  function updateWorkflow(updates) {
+    setWorkflow((current) => ({ ...current, ...updates }));
+  }
+
+  function resetDemo() {
+    setWorkflow(initialWorkflow);
+    setPage("dashboard");
+    setMobileMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
   function navigateTo(nextPage) {
     setPage(nextPage);
@@ -88,12 +117,12 @@ function App() {
       </aside>
 
       <main className="main-content">
-        {page === "dashboard" && <DashboardPage setPage={navigateTo} />}
-        {page === "prediction" && <PredictionPage />}
-        {page === "simulator" && <SimulatorPage />}
-        {page === "surplus" && <SurplusPage />}
-        {page === "recovery" && <RecoveryPage />}
-        {page === "analytics" && <AnalyticsPage />}
+        {page === "dashboard" && <DashboardPage setPage={navigateTo} workflow={workflow} resetDemo={resetDemo} />}
+        {page === "prediction" && <PredictionPage setPage={navigateTo} workflow={workflow} updateWorkflow={updateWorkflow} />}
+        {page === "simulator" && <SimulatorPage setPage={navigateTo} workflow={workflow} updateWorkflow={updateWorkflow} />}
+        {page === "surplus" && <SurplusPage setPage={navigateTo} workflow={workflow} updateWorkflow={updateWorkflow} />}
+        {page === "recovery" && <RecoveryPage setPage={navigateTo} workflow={workflow} updateWorkflow={updateWorkflow} />}
+        {page === "analytics" && <AnalyticsPage workflow={workflow} />}
       </main>
 
       <nav className="mobile-bottom-nav">
@@ -117,7 +146,7 @@ function App() {
   );
 }
 
-function DashboardPage({ setPage }) {
+function DashboardPage({ setPage, workflow, resetDemo }) {
   const organizations = [
     {
       icon: "♧",
@@ -151,12 +180,13 @@ function DashboardPage({ setPage }) {
           <span className="user-avatar">A</span>
           <strong>Kitchen Manager</strong>
           <span>⌄</span>
+          <button className="demo-reset-button" onClick={resetDemo} title="Reset demo scenario">↻ Reset Demo</button>
         </div>
       </div>
 
       <section className="command-hero premium-hero">
         <div className="hero-content">
-          <div className="hero-label">AI-POWERED FOOD SURPLUS MANAGEMENT</div>
+          <div className="hero-label"><span className="hero-label-dot"></span> AI-POWERED FOOD SURPLUS MANAGEMENT</div>
           <h1>
             Good Food
             <br />
@@ -174,20 +204,77 @@ function DashboardPage({ setPage }) {
               ◈ Open What-If Lab
             </button>
           </div>
+
+          <div className="hero-demo-status">
+            <span className="hero-demo-live"></span>
+            <div>
+              <strong>LIVE DEMO SCENARIO</strong>
+              <small>{workflow.attendance.toLocaleString()} consumers • {workflow.weather} • Event {workflow.event}</small>
+            </div>
+            <button onClick={resetDemo}>↻ Reset</button>
+          </div>
         </div>
 
         <div className="hero-visual premium-hero-visual">
+          <div className="hero-grid-glow"></div>
           <div className="glow-aura"></div>
           <div className="orbit orbit-one"></div>
           <div className="orbit orbit-two"></div>
-          <div className="hero-logo-wrap">
-            <img className="annasetu-hero-logo" src="/annasetu-logo.png" alt="AnnaSetu AI" />
+          <div className="hero-particle particle-one"></div>
+          <div className="hero-particle particle-two"></div>
+          <div className="hero-particle particle-three"></div>
+
+          <div className="hero-ai-core">
+            <div className="hero-ai-ring ring-back"></div>
+            <div className="hero-ai-ring ring-front"></div>
+            <div className="hero-ai-center">
+              <span className="hero-ai-symbol">✦</span>
+              <strong>AI</strong>
+              <small>FOOD INTELLIGENCE</small>
+            </div>
           </div>
-          <div className="hero-core">
-            <span>EXPECTED</span>
-            <strong>1,850</strong>
+
+          <div className="hero-core hero-core-main">
+            <span>EXPECTED DEMAND</span>
+            <strong>{(workflow.predicted || 1850).toLocaleString()}</strong>
             <small>CONSUMERS</small>
           </div>
+
+          <div className="hero-float-card hero-float-top">
+            <span className="float-icon">↗</span>
+            <div>
+              <small>OPTIMIZED</small>
+              <strong>+8.2%</strong>
+              <em>production accuracy</em>
+            </div>
+          </div>
+
+          <div className="hero-float-card hero-float-bottom">
+            <span className="float-icon gold">◇</span>
+            <div>
+              <small>WASTE TARGET</small>
+              <strong>-23%</strong>
+              <em>avoidable surplus</em>
+            </div>
+          </div>
+
+          <div className="hero-flow-line flow-left"></div>
+          <div className="hero-flow-line flow-right"></div>
+        </div>
+      </section>
+
+
+      <section className="problem-solution-strip">
+        <div className="problem-solution-card problem-card">
+          <span>THE PROBLEM</span>
+          <h3>Kitchen demand changes every day.</h3>
+          <p>Overproduction creates avoidable waste, while underproduction risks shortages.</p>
+        </div>
+        <div className="problem-solution-arrow">→</div>
+        <div className="problem-solution-card solution-card">
+          <span>THE ANNASETU SOLUTION</span>
+          <h3>Predict before you prepare.</h3>
+          <p>AnnaSetu combines demand signals, what-if planning and surplus recovery in one workflow.</p>
         </div>
       </section>
 
@@ -218,10 +305,10 @@ function DashboardPage({ setPage }) {
       </section>
 
       <section className="command-stats minimal-kpis">
-        <MetricCard icon="◎" label="Expected Consumers" value="1,850" badge="FORECAST" note="+4.2% vs weekly average" />
-        <MetricCard icon="◈" label="Recommended Production" value="1,920" badge="AI PLAN" note="Controlled safety buffer" />
-        <MetricCard icon="◇" label="Expected Surplus" value="72" badge="RECOVERY" note="Potentially recoverable" gold />
-        <MetricCard icon="₹" label="Potential Savings" value="₹1,440" badge="IMPACT" note="Estimated operational savings" gold />
+        <MetricCard icon="◎" label="Expected Consumers" value={(workflow.predicted || 1850).toLocaleString()} badge="FORECAST" note="Live scenario demand" />
+        <MetricCard icon="◈" label="Recommended Production" value={workflow.production.toLocaleString()} badge="AI PLAN" note="Connected from planning" />
+        <MetricCard icon="◇" label="Expected Surplus" value={workflow.surplus.toLocaleString()} badge="RECOVERY" note="From current scenario" gold />
+        <MetricCard icon="₹" label="Potential Savings" value={`₹${workflow.savings.toLocaleString()}`} badge="IMPACT" note="Scenario savings" gold />
       </section>
 
       <section className="impact-strip">
@@ -332,12 +419,12 @@ function ActionCard({
    STEP 3 — AI PREDICTION
 ========================================================= */
 
-function PredictionPage() {
+function PredictionPage({ setPage, workflow, updateWorkflow }) {
 
-  const [attendance, setAttendance] = useState(2000);
-  const [weather, setWeather] = useState("Clear");
-  const [event, setEvent] = useState("No");
-  const [predicted, setPredicted] = useState(0);
+  const attendance = workflow.attendance;
+  const weather = workflow.weather;
+  const event = workflow.event;
+  const predicted = workflow.predicted;
 
   function predict() {
 
@@ -347,19 +434,34 @@ function PredictionPage() {
     if (weather === "Hot") factor -= 0.02;
     if (event === "Yes") factor += 0.08;
 
-    setPredicted(
-      Math.round(attendance * factor)
-    );
+    const nextPrediction = Math.round(attendance * factor);
+    const nextProduction = Math.round(nextPrediction * 1.037);
+    const nextSurplus = Math.round(nextProduction * 0.0375);
+    updateWorkflow({
+      predicted: nextPrediction,
+      production: nextProduction,
+      surplus: nextSurplus,
+      savings: workflow.savings,
+      portionsAvoided: 0
+    });
   }
 
 
-  const dishes = [
-    ["Rice", "1,780", "1,850", "+3.9%"],
-    ["Dal Tadka", "1,620", "1,680", "+3.7%"],
-    ["Chicken Curry", "1,480", "1,530", "+3.4%"],
-    ["Veg Curry", "1,150", "1,200", "+4.3%"],
-    ["Roti", "1,700", "1,760", "+3.5%"],
+  const baseDishes = [
+    ["Rice", 0.96, 1.00],
+    ["Dal Tadka", 0.87, 0.91],
+    ["Chicken Curry", 0.79, 0.82],
+    ["Veg Curry", 0.62, 0.65],
+    ["Roti", 0.92, 0.95],
   ];
+
+  const demandBase = workflow.predicted || 1850;
+  const dishes = baseDishes.map(([name, demandFactor, productionFactor]) => {
+    const demand = Math.round(demandBase * demandFactor);
+    const production = Math.round(demandBase * productionFactor);
+    const buffer = (((production - demand) / Math.max(demand, 1)) * 100).toFixed(1);
+    return [name, demand.toLocaleString(), production.toLocaleString(), `+${buffer}%`];
+  });
 
 
   return (
@@ -409,7 +511,7 @@ function PredictionPage() {
             value={attendance}
             type="number"
             onChange={(e) =>
-              setAttendance(Number(e.target.value))
+              updateWorkflow({ attendance: Number(e.target.value) })
             }
             description="Expected consumers tomorrow"
           />
@@ -420,7 +522,7 @@ function PredictionPage() {
             label="WEATHER"
             value={weather}
             onChange={(e) =>
-              setWeather(e.target.value)
+              updateWorkflow({ weather: e.target.value })
             }
             options={["Clear", "Rain", "Hot"]}
             description="Expected weather condition"
@@ -432,7 +534,7 @@ function PredictionPage() {
             label="SPECIAL EVENT"
             value={event}
             onChange={(e) =>
-              setEvent(e.target.value)
+              updateWorkflow({ event: e.target.value })
             }
             options={["No", "Yes"]}
             description="Event affecting attendance"
@@ -691,12 +793,8 @@ function PredictionPage() {
 
           </div>
 
-          <p>
-            AnnaSetu combines expected attendance with
-            contextual demand signals such as weekday
-            patterns, weather and special events to estimate
-            consumption. A controlled production buffer is
-            then added to reduce stock-out risk.
+          <p className="dynamic-ai-explanation">
+            <strong>Current scenario:</strong> {attendance.toLocaleString()} expected consumers, {weather.toLowerCase()} weather and {event === "Yes" ? "a special event" : "no special event"}. AnnaSetu adjusts the demand estimate using these signals, then adds a controlled production buffer to reduce stock-out risk without encouraging unnecessary overproduction.
           </p>
 
           <div className="intelligence-points">
@@ -722,6 +820,15 @@ function PredictionPage() {
 
       </section>
 
+      <WorkflowNextStep
+        step="02"
+        eyebrow="NEXT IN THE ANNASETU FLOW"
+        title="Test the plan before you cook."
+        description="Take this forecast into the What-If Lab and see how changing attendance or conditions affects waste and savings."
+        button="Open What-If Lab"
+        onClick={() => setPage("simulator")}
+      />
+
     </div>
   );
 }
@@ -731,11 +838,11 @@ function PredictionPage() {
    STEP 4 — WHAT IF LAB
 ========================================================= */
 
-function SimulatorPage() {
+function SimulatorPage({ setPage, workflow, updateWorkflow }) {
 
-  const [attendance, setAttendance] = useState(2000);
-  const [weather, setWeather] = useState("Clear");
-  const [event, setEvent] = useState("No");
+  const attendance = workflow.attendance;
+  const weather = workflow.weather;
+  const event = workflow.event;
   const [result, setResult] = useState(null);
 
   function simulate() {
@@ -772,6 +879,20 @@ function SimulatorPage() {
       savings,
       surplus,
       wasteCost
+    });
+
+    updateWorkflow({
+      attendance,
+      weather,
+      event,
+      predicted: Math.round(attendance * factor),
+      production,
+      surplus,
+      recoverable: Math.max(0, Math.round(surplus * 0.85)),
+      served: Math.max(0, production - surplus),
+      savings,
+      wasteCost,
+      portionsAvoided
     });
   }
 
@@ -860,7 +981,7 @@ function SimulatorPage() {
             value={attendance}
             type="number"
             onChange={(e) =>
-              setAttendance(Number(e.target.value))
+              updateWorkflow({ attendance: Number(e.target.value) })
             }
             description="Number of expected consumers"
           />
@@ -870,7 +991,7 @@ function SimulatorPage() {
             label="WEATHER"
             value={weather}
             onChange={(e) =>
-              setWeather(e.target.value)
+              updateWorkflow({ weather: e.target.value })
             }
             options={["Clear", "Rain", "Hot"]}
             description="Expected conditions"
@@ -881,7 +1002,7 @@ function SimulatorPage() {
             label="SPECIAL EVENT"
             value={event}
             onChange={(e) =>
-              setEvent(e.target.value)
+              updateWorkflow({ event: e.target.value })
             }
             options={["No", "Yes"]}
             description="Event or occasion"
@@ -1007,6 +1128,15 @@ function SimulatorPage() {
 
           </div>
 
+          <WorkflowNextStep
+            step="03"
+            eyebrow="NEXT IN THE ANNASETU FLOW"
+            title="Now measure what remains."
+            description="Use the simulated production plan to analyze post-service surplus and identify food that may be recoverable."
+            button="Analyze Surplus"
+            onClick={() => setPage("surplus")}
+          />
+
         </section>
 
       )}
@@ -1020,12 +1150,12 @@ function SimulatorPage() {
    STEP 5 — SURPLUS INTELLIGENCE
 ========================================================= */
 
-function SurplusPage() {
+function SurplusPage({ setPage, workflow, updateWorkflow }) {
 
-  const [prepared, setPrepared] = useState(1920);
-  const [served, setServed] = useState(1815);
-  const [storage, setStorage] = useState("Refrigerated");
-  const [hours, setHours] = useState(2);
+  const prepared = workflow.production;
+  const served = workflow.served;
+  const storage = workflow.storage;
+  const hours = workflow.hours;
   const [result, setResult] = useState(null);
 
 
@@ -1064,6 +1194,14 @@ function SurplusPage() {
       recoverable,
       nonRecoverable,
       recoverRate
+    });
+
+    updateWorkflow({
+      surplus: remaining,
+      recoverable,
+      storage,
+      hours,
+      served
     });
   }
 
@@ -1143,7 +1281,7 @@ function SurplusPage() {
             value={prepared}
             type="number"
             onChange={(e) =>
-              setPrepared(Number(e.target.value))
+              updateWorkflow({ production: Number(e.target.value) })
             }
             description="Total prepared portions"
           />
@@ -1154,7 +1292,7 @@ function SurplusPage() {
             value={served}
             type="number"
             onChange={(e) =>
-              setServed(Number(e.target.value))
+              updateWorkflow({ served: Number(e.target.value) })
             }
             description="Total served portions"
           />
@@ -1164,7 +1302,7 @@ function SurplusPage() {
             label="STORAGE CONDITION"
             value={storage}
             onChange={(e) =>
-              setStorage(e.target.value)
+              updateWorkflow({ storage: e.target.value })
             }
             options={[
               "Refrigerated",
@@ -1179,7 +1317,7 @@ function SurplusPage() {
             label="TIME SINCE PREPARATION"
             value={hours}
             onChange={(e) =>
-              setHours(Number(e.target.value))
+              updateWorkflow({ hours: Number(e.target.value) })
             }
             options={[
               1,
@@ -1321,6 +1459,15 @@ function SurplusPage() {
 
           </div>
 
+          <WorkflowNextStep
+            step="04"
+            eyebrow="NEXT IN THE ANNASETU FLOW"
+            title="Recover the value of the surplus."
+            description="Send the recoverable quantity into the Recovery Engine to compare sale and donation pathways."
+            button="Open Recovery Engine"
+            onClick={() => setPage("recovery")}
+          />
+
         </section>
 
       )}
@@ -1356,16 +1503,24 @@ function SurplusPage() {
    STEP 6 — RECOVERY ENGINE
 ========================================================= */
 
-function RecoveryPage() {
+function RecoveryPage({ setPage, workflow, updateWorkflow }) {
 
-  const [quantity, setQuantity] = useState(60);
+  const quantity = workflow.recoverable;
   const [distance, setDistance] = useState(4);
   const [demand, setDemand] = useState("High");
   const [partner, setPartner] = useState("Available");
   const [recommendation, setRecommendation] = useState(null);
+  const [showRecipients, setShowRecipients] = useState(false);
+  const [selectedRecipient, setSelectedRecipient] = useState(workflow.recipient);
+  const [requestSent, setRequestSent] = useState(workflow.requestSent);
 
 
   function analyzeRecovery() {
+
+    setShowRecipients(false);
+    setSelectedRecipient(null);
+    setRequestSent(false);
+    updateWorkflow({ recipient: null, requestSent: false });
 
     let saleScore = 0;
     let donationScore = 0;
@@ -1462,7 +1617,7 @@ function RecoveryPage() {
 
           <div>
             <span>SURPLUS</span>
-            <strong>60</strong>
+            <strong>{quantity}</strong>
           </div>
 
           <b>→</b>
@@ -1507,7 +1662,7 @@ function RecoveryPage() {
             value={quantity}
             type="number"
             onChange={(e) =>
-              setQuantity(Number(e.target.value))
+              updateWorkflow({ recoverable: Number(e.target.value) })
             }
             description="Potentially recoverable portions"
           />
@@ -1627,17 +1782,41 @@ function RecoveryPage() {
             <RecoveryOption
               icon="♥"
               title="Donation"
-              description="Route eligible food to a verified nearby recipient or NGO partner."
+              description="Route eligible food to a verified nearby NGO, Madrasa or Ashram."
               value={`${quantity}`}
               label="PORTIONS TO DONATE"
               active={
                 recommendation.recommendationText ===
                 "Donation"
               }
+              actionLabel="Find Recipient →"
+              onAction={() => {
+                setShowRecipients(true);
+                setRequestSent(false);
+                updateWorkflow({ requestSent: false });
+              }}
             />
 
           </div>
 
+
+          {showRecipients && (
+            <RecipientMatchPanel
+              quantity={quantity}
+              selectedRecipient={selectedRecipient}
+              setSelectedRecipient={setSelectedRecipient}
+              requestSent={requestSent}
+              onSendRequest={() => {
+                if (selectedRecipient) {
+                  setRequestSent(true);
+                  updateWorkflow({
+                    recipient: selectedRecipient,
+                    requestSent: true
+                  });
+                }
+              }}
+            />
+          )}
 
           <div className="recovery-disclaimer">
 
@@ -1647,10 +1826,22 @@ function RecoveryPage() {
               Recovery recommendations are operational
               suggestions only. Food must be independently
               verified as safe and legally eligible before
-              sale or donation.
+              sale or donation. Recipient names shown in this prototype are demo organizations, not real verified partners.
             </p>
 
           </div>
+
+          {requestSent && (
+            <WorkflowNextStep
+              step="05"
+              eyebrow="IMPACT COMPLETE"
+              title="Track the result in Impact Analytics."
+              description="Show the judge how AnnaSetu turns one kitchen decision into measurable savings, recovered meals and waste reduction."
+              button="View Impact Analytics"
+              onClick={() => setPage("analytics")}
+              success
+            />
+          )}
 
         </section>
 
@@ -1661,13 +1852,32 @@ function RecoveryPage() {
 }
 
 
+function WorkflowNextStep({ step, eyebrow, title, description, button, onClick, success = false }) {
+  return (
+    <section className={`workflow-next-step ${success ? "success" : ""}`}>
+      <div className="workflow-step-number">{step}</div>
+      <div className="workflow-next-copy">
+        <span>{eyebrow}</span>
+        <h3>{title}</h3>
+        <p>{description}</p>
+      </div>
+      <button type="button" onClick={onClick}>
+        {button} <strong>→</strong>
+      </button>
+    </section>
+  );
+}
+
+
 function RecoveryOption({
   icon,
   title,
   description,
   value,
   label,
-  active
+  active,
+  actionLabel = "Create Pathway →",
+  onAction
 }) {
 
   return (
@@ -1697,11 +1907,130 @@ function RecoveryOption({
 
       <strong>{value}</strong>
 
-      <button>
-        Create Pathway →
+      <button onClick={onAction}>
+        {actionLabel}
       </button>
 
     </div>
+  );
+}
+
+
+function RecipientMatchPanel({
+  quantity,
+  selectedRecipient,
+  setSelectedRecipient,
+  requestSent,
+  onSendRequest
+}) {
+
+  const recipients = [
+    {
+      name: "Helping Hands Foundation",
+      type: "NGO",
+      icon: "🤝",
+      distance: "2.4 km",
+      capacity: 120,
+      status: "Available",
+      statusClass: "available",
+      note: "Community meal support"
+    },
+    {
+      name: "Al-Noor Madrasa",
+      type: "Madrasa",
+      icon: "◈",
+      distance: "3.1 km",
+      capacity: 180,
+      status: "Available",
+      statusClass: "available",
+      note: "Student meal support"
+    },
+    {
+      name: "Shanti Seva Ashram",
+      type: "Ashram",
+      icon: "⌂",
+      distance: "4.7 km",
+      capacity: 75,
+      status: "Limited",
+      statusClass: "limited",
+      note: "Resident meal support"
+    }
+  ];
+
+  return (
+    <section className="recipient-match-panel">
+      <div className="recipient-match-header">
+        <div>
+          <span className="dashboard-label">DONATION MATCHING</span>
+          <h3>Nearby recipients for {quantity} meals.</h3>
+          <p>
+            Prototype matches potentially recoverable food with nearby community organizations.
+          </p>
+        </div>
+        <div className="recipient-match-badge">✦ DEMO NETWORK</div>
+      </div>
+
+      <div className="recipient-grid">
+        {recipients.map((recipient) => {
+          const selected = selectedRecipient === recipient.name;
+          return (
+            <button
+              type="button"
+              key={recipient.name}
+              className={`recipient-card ${selected ? "selected" : ""}`}
+              onClick={() => setSelectedRecipient(recipient.name)}
+            >
+              <div className="recipient-card-top">
+                <div className="recipient-icon">{recipient.icon}</div>
+                <span className={`recipient-status ${recipient.statusClass}`}>
+                  <i></i>{recipient.status}
+                </span>
+              </div>
+
+              <span className="recipient-type">{recipient.type}</span>
+              <strong>{recipient.name}</strong>
+              <p>{recipient.note}</p>
+
+              <div className="recipient-meta">
+                <span>⌖ {recipient.distance}</span>
+                <span>◫ {recipient.capacity} meals</span>
+              </div>
+
+              <div className="recipient-select-line">
+                {selected ? "✓ Recipient selected" : "Select recipient"}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="recipient-match-footer">
+        <div className="recipient-match-summary">
+          <span>SELECTED RECIPIENT</span>
+          <strong>{selectedRecipient || "Choose an organization above"}</strong>
+        </div>
+
+        <button
+          className="recipient-send-button"
+          disabled={!selectedRecipient || requestSent}
+          onClick={onSendRequest}
+        >
+          {requestSent ? "✓ Request Created" : "Send Donation Request →"}
+        </button>
+      </div>
+
+      {requestSent && selectedRecipient && (
+        <div className="recipient-success">
+          <span>✓</span>
+          <div>
+            <strong>Donation request created</strong>
+            <p>
+              {quantity} meals matched with {selectedRecipient}. Estimated delivery is within the selected recipient's service area.
+            </p>
+          </div>
+        </div>
+      )}
+    </section>
   );
 }
 
@@ -1710,7 +2039,7 @@ function RecoveryOption({
    STEP 7 — IMPACT ANALYTICS
 ========================================================= */
 
-function AnalyticsPage() {
+function AnalyticsPage({ workflow }) {
 
   const bars = [
     ["Mon", 45],
@@ -1781,15 +2110,15 @@ function AnalyticsPage() {
         <ImpactCard
           icon="◇"
           label="FOOD WASTE REDUCED"
-          value="23%"
-          change="+8.4%"
+          value={workflow.portionsAvoided > 0 ? Math.min(99, Math.round((workflow.portionsAvoided / 2080) * 100)) + "%" : "23%"}
+          change="LIVE"
           description="vs previous month"
         />
 
         <ImpactCard
           icon="◉"
           label="FOOD SAVED"
-          value="342 kg"
+          value={`${Math.max(0, Math.round(workflow.recoverable * 0.18))} kg`}
           change="+12%"
           description="this month"
         />
@@ -1797,7 +2126,7 @@ function AnalyticsPage() {
         <ImpactCard
           icon="♧"
           label="MEALS RECOVERED"
-          value="1,240"
+          value={(workflow.recoverable * 20 || 1240).toLocaleString()}
           change="+18%"
           description="sale + donation"
         />
@@ -1805,7 +2134,7 @@ function AnalyticsPage() {
         <ImpactCard
           icon="₹"
           label="ESTIMATED SAVINGS"
-          value="₹18,450"
+          value={`₹${(workflow.savings + workflow.recoverable * 15 || 18450).toLocaleString()}`}
           change="+15%"
           description="operational impact"
         />
@@ -1985,6 +2314,25 @@ function AnalyticsPage() {
 
       </section>
 
+
+      <section className="live-demo-summary">
+        <div>
+          <span>LIVE DEMO SCENARIO</span>
+          <strong>{workflow.attendance.toLocaleString()} consumers</strong>
+        </div>
+        <div>
+          <span>PRODUCTION</span>
+          <strong>{workflow.production.toLocaleString()} portions</strong>
+        </div>
+        <div>
+          <span>RECOVERABLE</span>
+          <strong>{workflow.recoverable.toLocaleString()} portions</strong>
+        </div>
+        <div>
+          <span>RECIPIENT</span>
+          <strong>{workflow.recipient || "Not selected"}</strong>
+        </div>
+      </section>
 
       <div className="analytics-footer-note">
 
